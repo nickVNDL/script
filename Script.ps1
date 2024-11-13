@@ -1,18 +1,13 @@
-# PowerShell скрипт для сбора информации о системных компонентах и их драйверах
-
-# Создаем объект для хранения информации
 $systemInfo = @{}
 
-# Получаем информацию о процессоре
+# Процессор
 $processor = Get-WmiObject -Class Win32_Processor
 $systemInfo.Processor = @{
     Name = $processor.Name
     Manufacturer = $processor.Manufacturer
-    Version = $processor.Version
-    DriverVersion = $processor.DriverVersion
 }
 
-# Получаем информацию о видеокарте
+# Видеокарта
 $videoCard = Get-WmiObject -Class Win32_VideoController
 $systemInfo.VideoCard = @{
     Name = $videoCard.Name
@@ -21,7 +16,7 @@ $systemInfo.VideoCard = @{
     DriverVersion = $videoCard.DriverVersion
 }
 
-# Получаем информацию о материнской плате
+#  Материнская плата
 $motherboard = Get-WmiObject -Class Win32_BaseBoard
 $systemInfo.Motherboard = @{
     Name = $motherboard.Product
@@ -30,20 +25,8 @@ $systemInfo.Motherboard = @{
     DriverVersion = $motherboard.DriverVersion
 }
 
-# Получаем информацию о драйверах
-$drivers = Get-WmiObject -Class Win32_PnPSignedDriver
-$systemInfo.Drivers = @()
-foreach ($driver in $drivers) {
-    $systemInfo.Drivers += @{
-        Name = $driver.DeviceName
-        Manufacturer = $driver.Manufacturer
-        Version = $driver.DriverVersion
-        Date = $driver.DriverDate
-    }
-}
 
-# Сохраняем информацию в файл
-$filePath = "C:\system_info.txt"
-$systemInfo | ConvertTo-Json | Out-File -FilePath $filePath -Encoding utf8
+$filePath = "C:\Users\Nicks\system_info.txt"
+$systemInfo | ConvertTo-Json | Out-File -FilePath $filePath -Encoding default
 
 Write-Host "Информация о системных компонентах и их драйверах сохранена в файл $filePath"
